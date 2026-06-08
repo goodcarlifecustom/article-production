@@ -1,0 +1,15 @@
+{
+  "name": "article-production-template",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "html": "node scripts/generate-html.js",
+    "validate": "node scripts/validate-article.js",
+    "wp:draft": "node scripts/publish-wp-draft.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "marked": "^12.0.2"
+  }
+}
