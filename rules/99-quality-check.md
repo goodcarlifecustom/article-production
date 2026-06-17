@@ -4,20 +4,36 @@
 
 投稿前に記事・HTML・設定の重大な不備を検出する。
 
+## 必須ファイル
+
+- `input.yml`
+- `serp.md`
+- `headings.csv`
+- `heading-analysis.md`
+- `heading-plan.md`
+- `draft.md`
+- `article.html`
+- `article-linked.html`
+- `article-decorated.html`
+- `external-links.md`
+
 ## チェック項目
 
-- 必須ファイルが存在するか
-- `draft.md`、`article.html`、`article-linked.html`、`article-decorated.html` が空でないか
-- `article-decorated.html` に外部リンクが含まれるか
-- `article-decorated.html` は存在だけでなく、HTMLタグを除いた本文500文字以上があるか
-- 本文500文字未満の場合はWordPress下書き投稿へ進まないか
-- WordPress投稿対象が `article-decorated.html` になっているか
-- 途中生成HTMLを投稿対象として使う記述が残っていないか
-- `post_to_wp: true` の場合のみ投稿工程に進む仕様になっているか
-- `post_to_wp` の初期推奨値が `false` で、未指定時に勝手にWordPress投稿しないか
+- `heading-plan.md` が存在する
+- `heading-plan.md` が空でない
+- `heading-plan.md` がHTMLタグのみで構成されている
+- `heading-plan.md` に `<h2>` が3つ以上ある
+- `heading-plan.md` に `<h3>` が必要に応じてある
+- `heading-plan.md` にH1がない
+- `outline.md` が存在しない
+- `article-decorated.html` が存在する
+- `article-decorated.html` のHTMLタグ除去後本文が500文字以上
+- `target_word_count` がある場合、記事本文が目標文字数に対して極端に短すぎない
+- `post_to_wp` 未指定またはfalseの場合、WordPress投稿しない
 - 投稿ステータスが `draft` 以外になっていないか
-- 公開状態の投稿指示が入っていないか
 - `.env` がコミット対象になっていないか
+- 認証情報がファイルに残っていない
+- WordPressアプリケーションパスワード、認証ヘッダー、Basic認証値、nonce、preview token が残っていない
 
 ## 実行
 

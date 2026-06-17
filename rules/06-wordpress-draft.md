@@ -1,4 +1,4 @@
-# 05 WordPress下書き投稿ルール
+# 06 WordPress下書き投稿ルール
 
 ## 目的
 
