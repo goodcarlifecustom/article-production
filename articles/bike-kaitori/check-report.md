@@ -66,3 +66,19 @@
 
 - status: draft
 - Overall: PASS
+
+## Merge conflict resolution verification
+
+- result: PASS
+- resolved_at: 2026-06-20T09:02:00Z
+- conflict_files_checked: check-report.md, metadata.json, wp-result.md
+- adopted_result: posted draft result retained
+- post_id: 29442
+- draft_url: https://poi-poi.co.jp/bike/?p=29442
+- slug: bike-kaitori
+- status: draft
+- article-decorated.html SHA-256: 1ba18cd36c8a8c575f1a574e759f2e4cd0db0f6f525c0602f3ae377de3926f14
+- WordPress本文 SHA-256: 1ba18cd36c8a8c575f1a574e759f2e4cd0db0f6f525c0602f3ae377de3926f14
+- REST API再取得: success
+- H1なし確認: yes
+- removed_old_results: 未投稿、投稿ID未作成、POSTタイムアウトの古い結果なし
