@@ -2,83 +2,39 @@
 
 - slug: bike-kaitori
 - result: PASS
+## 詳細
 
-## Local article validation
-
-- result: PASS
-- command: npm run check -- --slug bike-kaitori
-- article.html H1なし: yes
-- article-linked.html H1なし: yes
-- article-decorated.html H1なし: yes
-- metadata.json: valid JSON
-- status: draft
-
-## Decoration validation
-
-- result: PASS
-- command: npm run decorate -- --slug bike-kaitori
-- command: npm run check:decoration -- --slug bike-kaitori
-- decoration-manifest.json: created
-- article-decorated.html SHA-256: 1ba18cd36c8a8c575f1a574e759f2e4cd0db0f6f525c0602f3ae377de3926f14
-
-## WordPress connection
-
-- result: PASS
-- command: npm run article:complete -- --slug bike-kaitori
-- REST root: reachable
-- authenticated read/write: success
-
-## Duplicate check
-
-- result: PASS
-- 投稿ID 29442確認: draft / slug=bike-kaitori
-- 同一slugの既存draftとして再利用
-- publish/future/pending/privateの自動更新なし
-
-## Minimal draft createまたはexisting draft reuse
-
-- result: existing-id
-- reused_post_id: 29442
-- 新規下書き作成: not required
-
-## Content update
-
-- result: update-timeout-saved
-- explanation: content更新リクエストはタイムアウト扱いになったが、直後の認証付き再取得でWordPress本文SHA-256がローカル本文と一致したため保存成功として扱った。
-
-## REST API read-back
-
-- result: PASS
-- post_id: 29442
-- title: バイク買取はどこがいい？相場・査定・必要書類・注意点を初めてでもわかるように解説
-- slug: bike-kaitori
-- status: draft
-- H1なし確認: yes
-
-## Content SHA match
-
-- result: PASS
-- article-decorated.html SHA-256: 1ba18cd36c8a8c575f1a574e759f2e4cd0db0f6f525c0602f3ae377de3926f14
-- WordPress本文 SHA-256: 1ba18cd36c8a8c575f1a574e759f2e4cd0db0f6f525c0602f3ae377de3926f14
-- SHA一致: yes
-
-## Final status
-
-- status: draft
-- Overall: PASS
-
-## Merge conflict resolution verification
-
-- result: PASS
-- resolved_at: 2026-06-20T09:02:00Z
-- conflict_files_checked: check-report.md, metadata.json, wp-result.md
-- adopted_result: posted draft result retained
-- post_id: 29442
-- draft_url: https://poi-poi.co.jp/bike/?p=29442
-- slug: bike-kaitori
-- status: draft
-- article-decorated.html SHA-256: 1ba18cd36c8a8c575f1a574e759f2e4cd0db0f6f525c0602f3ae377de3926f14
-- WordPress本文 SHA-256: 1ba18cd36c8a8c575f1a574e759f2e4cd0db0f6f525c0602f3ae377de3926f14
-- REST API再取得: success
-- H1なし確認: yes
-- removed_old_results: 未投稿、投稿ID未作成、POSTタイムアウトの古い結果なし
+- OK: input.yml を確認しました
+- OK: metadata.json を確認しました
+- OK: research.md を確認しました
+- OK: serp.md を確認しました
+- OK: headings.csv を確認しました
+- OK: heading-analysis.md を確認しました
+- OK: heading-plan.md を確認しました
+- OK: draft.md を確認しました
+- OK: article.html を確認しました
+- OK: article-linked.html を確認しました
+- OK: article-decorated.html を確認しました
+- OK: external-links.md を確認しました
+- OK: metadata.json は有効なJSONです
+- OK: research.md は空ではありません
+- OK: main_keyword を確認しました
+- OK: related_keywords 配列を確認しました
+- OK: title は生成済みです
+- OK: slug は生成済みです
+- OK: meta_description は生成済みです
+- OK: search_intent は生成済みです
+- OK: persona は生成済みです
+- OK: article_type は生成済みです
+- OK: target_word_count は生成済みです
+- OK: status: draft を確認しました
+- OK: post_to_wp はbooleanです
+- OK: slug は一致しています
+- OK: メインキーワードは一致しています
+- OK: article.html にH1はありません
+- OK: article-linked.html にH1はありません
+- OK: article-decorated.html にH1はありません
+- OK: 本文文字数は目標から大きく外れていません
+- OK: 外部URLのベタ書きは検出されません
+- OK: .env はコミット対象ではありません
+- OK: 認証情報・nonceの残存は検出されませんでした
