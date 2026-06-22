@@ -21,6 +21,29 @@ test('env validation rejects missing and production http',()=>{
  assert.equal(redact('x secret y',{WP_APPLICATION_PASSWORD:'secret'}),'x [redacted] y');
 });
 
+
+
+test('wp env supports legacy and current variable names with normalized URLs',()=>{
+ const legacy=requireWpEnv({WP_REST_ROOT:'https://poi-poi.co.jp/bike/wp-json/',WP_USERNAME:'u',WP_APP_PASSWORD:'legacy',WP_DEFAULT_STATUS:'draft'});
+ assert.equal(legacy.siteUrl,'https://poi-poi.co.jp/bike');
+ assert.equal(legacy.restRoot,'https://poi-poi.co.jp/bike/wp-json/');
+ assert.equal(legacy.password,'legacy');
+ const current=requireWpEnv({WP_SITE_URL:'https://poi-poi.co.jp/bike/',WP_USERNAME:'u',WP_APPLICATION_PASSWORD:'current'});
+ assert.equal(current.siteUrl,'https://poi-poi.co.jp/bike');
+ assert.equal(current.restRoot,'https://poi-poi.co.jp/bike/wp-json/');
+ assert.equal(current.password,'current');
+ assert.ok(!current.restRoot.includes('/wp-json/wp-json/'));
+});
+
+test('wp env error messages list alternatives without secret values',()=>{
+ assert.throws(()=>requireWpEnv({WP_USERNAME:'u',WP_APP_PASSWORD:'secret'}),/WP_SITE_URL or WP_REST_ROOT/);
+ assert.throws(()=>requireWpEnv({WP_SITE_URL:'https://example.com',WP_USERNAME:'u'}),/WP_APPLICATION_PASSWORD or WP_APP_PASSWORD/);
+ assert.throws(()=>requireWpEnv({WP_SITE_URL:'https://example.com',WP_APPLICATION_PASSWORD:'secret'}),/WP_USERNAME/);
+ assert.throws(()=>requireWpEnv({WP_SITE_URL:'http://example.com',WP_USERNAME:'u',WP_APPLICATION_PASSWORD:'secret'}),/HTTPS/);
+ assert.throws(()=>requireWpEnv({WP_REST_ROOT:'https://example.com/wp/v2',WP_USERNAME:'u',WP_APP_PASSWORD:'secret'}),/WP_REST_ROOT must end with \/wp-json\//);
+ assert.equal(redact('secret Basic dXNlcjpwYXNz',{WP_APP_PASSWORD:'secret'}).includes('secret'),false);
+});
+
 test('content verification allows newline-only differences and catches stripped classes',()=>{
  const a='<p class="x">本文</p>\r\n<!-- wp:paragraph -->';
  assert.deepEqual(verifyContent(a,a.replace(/\r\n/g,'\n')),[]);
@@ -37,7 +60,7 @@ test('wp draft creates draft, saves metadata, updates same ID on rerun, and dry-
   const m=u.pathname.match(/\/wp-json\/wp\/v2\/posts\/(\d+)/); if(m&&req.method==='GET') return res.end(JSON.stringify(posts.find(p=>p.id==m[1])||{}));
   if(m&&req.method==='POST'){writes++; const p=JSON.parse(body); posts[0]={id:Number(m[1]),status:'draft',slug:p.slug,title:{raw:p.title},content:{raw:p.content}}; return res.end(JSON.stringify(posts[0]));}
   res.statusCode=404; res.end('{}');});});
- try{const env={...process.env,WP_SITE_URL:srv.url,WP_USERNAME:'u',WP_APPLICATION_PASSWORD:'app-pass',WP_DRAFT_SKIP_PRECHECKS:'1'};
+ try{const env={...process.env,WP_SITE_URL:srv.url,WP_REST_ROOT:'',WP_USERNAME:'u',WP_APPLICATION_PASSWORD:'app-pass',WP_APP_PASSWORD:'',WP_DRAFT_SKIP_PRECHECKS:'1'};
   await runAsync(['scripts/post-wordpress-draft.mjs','--slug',slug,'--dry-run'],{env}); assert.equal(existsSync(path.join(root,'articles',slug,'wp-result.md')),false); assert.equal(writes,0);
   await runAsync(['scripts/post-wordpress-draft.mjs','--slug',slug,'--confirm'],{env}); let meta=JSON.parse(readFileSync(path.join(root,'articles',slug,'metadata.json'))); assert.equal(meta.wordpress_draft_id,1); assert.equal(meta.wordpress_status,'draft'); assert.ok(meta.wordpress_content_sha256);
   await runAsync(['scripts/post-wordpress-draft.mjs','--slug',slug,'--confirm'],{env}); assert.equal(writes,2); assert.equal(posts.length,1);
@@ -45,7 +68,7 @@ test('wp draft creates draft, saves metadata, updates same ID on rerun, and dry-
 });
 
 test('wp draft refuses post_to_wp false, missing confirm, existing published slug, and content mismatch', async()=>{
- const slug='wp-draft-error-test'; tmpArticle(slug,false); const env={...process.env,WP_SITE_URL:'http://127.0.0.1:9',WP_USERNAME:'u',WP_APPLICATION_PASSWORD:'p',WP_DRAFT_SKIP_PRECHECKS:'1'};
+ const slug='wp-draft-error-test'; tmpArticle(slug,false); const env={...process.env,WP_SITE_URL:'http://127.0.0.1:9',WP_REST_ROOT:'',WP_USERNAME:'u',WP_APPLICATION_PASSWORD:'p',WP_APP_PASSWORD:'',WP_DRAFT_SKIP_PRECHECKS:'1'};
  assert.throws(()=>run(['scripts/post-wordpress-draft.mjs','--slug',slug,'--confirm'],{env}),/post_to_wp/);
  JSON.parse(readFileSync(path.join(root,'articles',slug,'metadata.json'))); let m=JSON.parse(readFileSync(path.join(root,'articles',slug,'metadata.json'))); m.post_to_wp=true; writeFileSync(path.join(root,'articles',slug,'metadata.json'),JSON.stringify(m));
  assert.throws(()=>run(['scripts/post-wordpress-draft.mjs','--slug',slug],{env}),/confirm/);
