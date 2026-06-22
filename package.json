@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "dotenv": "^16.4.7",
-    "parse5": "^7.1.2"
+    "parse5": "^7.1.2",
+    "undici": "^7.28.0"
   },
   "engines": {
     "node": ">=20"
